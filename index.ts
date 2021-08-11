@@ -42,10 +42,17 @@ function useLocalStorage<T>(
     try {
       const item = window.localStorage.getItem(key);
       const res: T = item ? parser(item) : defaultValue;
+
       return res;
     } catch (e) {
       logger(e);
       return defaultValue;
+    }
+  });
+
+  window.addEventListener("storage", (e: StorageEvent) => {
+    if (e.key === key) {
+      setValue(e.newValue ? parser(e.newValue) : e.oldValue);
     }
   });
 
